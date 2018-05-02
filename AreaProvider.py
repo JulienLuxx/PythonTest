@@ -103,7 +103,7 @@ for u in urlArr:
 dicts=dict(zip(sonArea,codeArr))
 
 tuples=tuple(zip(sonArea,codeArr))
-print()
+
 
 # for t in tuples:
 #     print(t)
