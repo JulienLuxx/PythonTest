@@ -34,6 +34,17 @@ def write03Excel(path,sheetName,value):
     wb.save(path)
     print('success')
 
+def write03ExcelNew(path,sheetName,lists):
+    wb=xlwt.Workbook()
+    sheet=wb.add_sheet(sheetName)
+    for i in range(len(lists)):
+        sheet.write(i,0,lists[i].name)
+        sheet.write(i,1,lists[i].code)
+        sheet.write(i,2,lists[i].parent)
+
+    wb.save(path)
+    print('success')
+
 urlArr=[]
 index='index.html'
 arr= ['index.html']
@@ -44,6 +55,8 @@ page=GetSinglePageHtml(url+arr[0])
 provinceList=[]
 provinceCodes=[]
 provinceParent=[]
+AreaList=[]
+AreaList.append(Area('Name','Code','Parent'))
 
 soup1=bs(page,'html.parser',from_encoding='gbk')
 resList=soup1.find_all('a')
@@ -54,12 +67,15 @@ for res in resList:
     provinceCodes.append(u[:2])
     provinceList.append(res.get_text())
     provinceParent.append('0')
+    a=Area(res.get_text(),u[:2],'0')
+    AreaList.append(a)
 
 
 sonUrlArr=[]
 sonArea=[]
 codeArr=[]
 areaParent=[]
+sonAreaList=[]
 
 parentLabel=0
 for u in urlArr:
@@ -68,6 +84,7 @@ for u in urlArr:
     rlist=soup.find_all('a')
     rlist.remove(rlist[len(rlist)-1])    
     count=0
+    tempcode=''
     for r in rlist:
         href=r.get('href')
         text=r.get_text()
@@ -75,14 +92,17 @@ for u in urlArr:
         if(count%2==0):
             if(href.find('http')<0):
                 sonUrlArr.append(href)
-            if(text.find('ICP')<0):
+            if(text.find('ICP')<0):                
                 sonArea.append(text)
                 areaParent.append(provinceCodes[parentLabel])
+                aa=Area(text,tempcode,provinceCodes[parentLabel])
+                AreaList.append(aa)
+                
         else:
             if(text.find('ICP')<0):
+                tempcode=text
                 codeArr.append(text)
         # sonArea.appendr.get_text()
-    
     parentLabel+=1
 
 # newArr=sorted(list(set(sonUrlArr)))
@@ -121,8 +141,12 @@ tuples=tuple(zip(sonArea,codeArr,areaParent))
 
 t=(('Name','Code','Parent'),)+pturple+tuples
 
+# for a in sonAreaList:
+#     print(a.name,a.code,a.parent)
 
-write03Excel('data/2003.xls','Area',t)
+
+# write03Excel('data/2003.xls','Area',t)
+write03ExcelNew('data/2003.xls','Area',AreaList)
 
 # for key in dicts:
 #     print(key)
