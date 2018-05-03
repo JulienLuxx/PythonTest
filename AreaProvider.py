@@ -10,8 +10,11 @@ import math
 import xlwt
 
 class Area(object):
-    def __init__(self,name):
+    def __init__(self,name,code,parent):
         self.name=name
+        self.code=code
+        self.parent=parent
+
 
 def GetSinglePageHtml(url):
         headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'}
@@ -27,10 +30,7 @@ def write03Excel(path,sheetName,value):
     for i in range(len(value)):
         for j in range(len(value[i])):
             sheet.write(i,j,value[i][j])
-    # for k,v in value.items():
-    #     for i in range(len(v)):
-    #         j=v.get(i)
-    #         sheet.write(i,j,k)
+
     wb.save(path)
     print('success')
 
@@ -55,6 +55,7 @@ sonUrlArr=[]
 sonArea=[]
 codeArr=[]
 
+parentLabel=0
 for u in urlArr:
     p=GetSinglePageHtml(url+u)
     soup=bs(p,'html.parser',from_encoding='gbk')
@@ -100,7 +101,7 @@ for u in urlArr:
 # for area in areaList:
 #     print(area)
 
-dicts=dict(zip(sonArea,codeArr))
+# dicts=dict(zip(sonArea,codeArr))
 
 tuples=tuple(zip(sonArea,codeArr))
 
@@ -108,9 +109,9 @@ tuples=tuple(zip(sonArea,codeArr))
 # for t in tuples:
 #     print(t)
 
+t=(('Name','Code','Parent'),)+tuples
 
-
-write03Excel('data/2003.xls','Area',tuples)
+write03Excel('data/2003.xls','Area',t)
 
 # for key in dicts:
 #     print(key)
