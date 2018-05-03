@@ -42,12 +42,15 @@ url='http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016/'
 page=GetSinglePageHtml(url+arr[0])
 
 provinceList=[]
+provinceCodes=[]
 
 soup1=bs(page,'html.parser',from_encoding='gbk')
 resList=soup1.find_all('a')
 resList.remove(resList[len(resList)-1])
 for res in resList:
-    urlArr.append(res.get('href'))
+    u=res.get('href')
+    urlArr.append(u)
+    provinceCodes.append(u[:2])
     provinceList.append(res.get_text())
 
 
@@ -103,13 +106,15 @@ for u in urlArr:
 
 # dicts=dict(zip(sonArea,codeArr))
 
+pturple=tuple(zip(provinceList,provinceCodes))
 tuples=tuple(zip(sonArea,codeArr))
 
 
 # for t in tuples:
 #     print(t)
 
-t=(('Name','Code','Parent'),)+tuples
+t=(('Name','Code','Parent'),)+pturple+tuples
+
 
 write03Excel('data/2003.xls','Area',t)
 
