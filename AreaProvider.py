@@ -43,6 +43,7 @@ page=GetSinglePageHtml(url+arr[0])
 
 provinceList=[]
 provinceCodes=[]
+provinceParent=[]
 
 soup1=bs(page,'html.parser',from_encoding='gbk')
 resList=soup1.find_all('a')
@@ -52,32 +53,37 @@ for res in resList:
     urlArr.append(u)
     provinceCodes.append(u[:2])
     provinceList.append(res.get_text())
+    provinceParent.append('0')
 
 
 sonUrlArr=[]
 sonArea=[]
 codeArr=[]
+areaParent=[]
 
 parentLabel=0
 for u in urlArr:
     p=GetSinglePageHtml(url+u)
     soup=bs(p,'html.parser',from_encoding='gbk')
     rlist=soup.find_all('a')
-    rlist.remove(rlist[len(rlist)-1])
+    rlist.remove(rlist[len(rlist)-1])    
     count=0
     for r in rlist:
         href=r.get('href')
         text=r.get_text()
-        count+=1
+        count+=1        
         if(count%2==0):
             if(href.find('http')<0):
                 sonUrlArr.append(href)
             if(text.find('ICP')<0):
                 sonArea.append(text)
+                areaParent.append(provinceCodes[parentLabel])
         else:
             if(text.find('ICP')<0):
                 codeArr.append(text)
         # sonArea.appendr.get_text()
+    
+    parentLabel+=1
 
 # newArr=sorted(list(set(sonUrlArr)))
 
@@ -106,8 +112,8 @@ for u in urlArr:
 
 # dicts=dict(zip(sonArea,codeArr))
 
-pturple=tuple(zip(provinceList,provinceCodes))
-tuples=tuple(zip(sonArea,codeArr))
+pturple=tuple(zip(provinceList,provinceCodes,provinceParent))
+tuples=tuple(zip(sonArea,codeArr,areaParent))
 
 
 # for t in tuples:
