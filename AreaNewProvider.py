@@ -14,3 +14,26 @@ class Area(object):
         self.name=name
         self.code=code
         self.parent=parent
+
+def GetSinglePageHtml(url):
+        headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'}
+        req =request.Request(url,headers=headers)
+        res=request.urlopen(req)
+        content =res.read()
+        page=content.decode('gbk')
+        return page
+
+def entityWrite03Excel(path,sheetName,lists):
+    wb=xlwt.Workbook()
+    sheet=wb.add_sheet(sheetName)
+    for i in range(len(lists)):
+        sheet.write(i,0,lists[i].name)
+        sheet.write(i,1,lists[i].code)
+        sheet.write(i,2,lists[i].parent)
+
+    wb.save(path)
+    print('success')
+
+
+arr= ['index.html']
+url='http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016/'
