@@ -37,9 +37,14 @@ def entityWrite03Excel(path,sheetName,lists):
 
 arr= ['index.html']
 url='http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016/'
+urlArr=[]
 
 indexPage=GetSinglePageHtml(url+arr[0])
 
 indexSoup=bs(indexPage,'html.parser',from_encoding='gbk')
 indexResList=indexSoup.find_all('a')
 indexResList.remove(indexResList[len(indexResList)-1])
+
+for ires in indexResList:
+    u=ires.get('href')
+    urlArr.append(u)
