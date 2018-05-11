@@ -132,14 +132,14 @@ for u in urlArr:
 
 # dicts=dict(zip(sonArea,codeArr))
 
-pturple=tuple(zip(provinceList,provinceCodes,provinceParent))
-tuples=tuple(zip(sonArea,codeArr,areaParent))
+# pturple=tuple(zip(provinceList,provinceCodes,provinceParent))
+# tuples=tuple(zip(sonArea,codeArr,areaParent))
 
 
 # for t in tuples:
 #     print(t)
 
-t=(('Name','Code','Parent'),)+pturple+tuples
+# t=(('Name','Code','Parent'),)+pturple+tuples
 
 # for a in sonAreaList:
 #     print(a.name,a.code,a.parent)
