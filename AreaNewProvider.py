@@ -39,6 +39,7 @@ arr= ['index.html']
 url='http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016/'
 urlArr=[]
 AreaList=[]
+provinceCodes=[]
 AreaList.append(Area('Name','Code','Parent'))
 
 indexPage=GetSinglePageHtml(url+arr[0])
@@ -50,5 +51,36 @@ indexResList.remove(indexResList[len(indexResList)-1])
 for ires in indexResList:
     u=ires.get('href')
     urlArr.append(u)
+    provinceCodes.append(u[:2])
     indexArea=Area(ires.get_text(),u[:2],'0')
     AreaList.append(indexArea)
+
+sonUrlArr=[]
+parentLabel=0
+for u in urlArr:
+    p=GetSinglePageHtml(url+u)
+    soup=bs(p,'html.parser',from_encoding='gbk')
+    resList=soup.find_all('a')
+    resList.remove(resList[len(resList)-1])
+    count=0
+    tempcode=''
+    for res in resList:
+        href=res.get('href')
+        text=res.get_text()
+        count+=1
+        if(count%2==0):
+            if(href.find('http')<0):
+                sonUrlArr.append(href)
+            if(text.find('ICP')<0):
+                sonArea=Area(text,tempcode,provinceCodes[parentLabel])
+                AreaList.append(sonArea)
+        
+        else:
+            if(text.find('ICP')<0):
+                tempcode=text
+        
+    parentLabel+=1
+
+
+entityWrite03Excel('data/2003.xls','Area',AreaList)
+
