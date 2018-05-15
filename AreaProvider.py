@@ -116,7 +116,7 @@ for u in urlArr:
                 gcount+=1
                 if(gcount%2==0):
                     if(gtext.find('ICP')<0):
-                        ga=Area(gtext,gtempcode,tempcode)
+                        ga=Area(gtext,gtempcode,tempcode,qsort)
                         AreaList.append(ga)
                         qsort+=1
                 else:
