@@ -10,10 +10,11 @@ import math
 import xlwt
 
 class Area(object):
-    def __init__(self,name,code,parent):
+    def __init__(self,name,code,parent,sort):
         self.name=name
         self.code=code
         self.parent=parent
+        self.sort=sort
 
 
 def GetSinglePageHtml(url):
@@ -56,19 +57,21 @@ provinceList=[]
 provinceCodes=[]
 provinceParent=[]
 AreaList=[]
-AreaList.append(Area('Name','Code','Parent'))
+AreaList.append(Area('Name','Code','Parent','Sort'))
 
 soup1=bs(page,'html.parser',from_encoding='gbk')
 resList=soup1.find_all('a')
 resList.remove(resList[len(resList)-1])
+psort=1
 for res in resList:
     u=res.get('href')
     urlArr.append(u)
     provinceCodes.append(u[:2])
     provinceList.append(res.get_text())
     provinceParent.append('0')
-    a=Area(res.get_text(),u[:2],'0')
+    a=Area(res.get_text(),u[:2],'0',psort)
     AreaList.append(a)
+    psort+=1
 
 
 sonUrlArr=[]
@@ -85,6 +88,7 @@ for u in urlArr:
     rlist.remove(rlist[len(rlist)-1])    
     count=0
     tempcode=''
+    csort=1
     for r in rlist:
         href=r.get('href')
         text=r.get_text()
@@ -95,8 +99,9 @@ for u in urlArr:
             if(text.find('ICP')<0):                
                 sonArea.append(text)
                 areaParent.append(provinceCodes[parentLabel])
-                aa=Area(text,tempcode,provinceCodes[parentLabel])
+                aa=Area(text,tempcode,provinceCodes[parentLabel],csort)
                 AreaList.append(aa)
+                csort+=1
 
             sp=GetSinglePageHtml(url+href)
             gsoup=bs(sp,'html.parser',from_encoding='gbk')
@@ -104,6 +109,7 @@ for u in urlArr:
             grlist.remove(grlist[len(grlist)-1])
             gcount=0
             gtempcode=''
+            qsort=1
             for gr in grlist:
                 ghref=gr.get('href')
                 gtext=gr.get_text()
@@ -112,6 +118,7 @@ for u in urlArr:
                     if(gtext.find('ICP')<0):
                         ga=Area(gtext,gtempcode,tempcode)
                         AreaList.append(ga)
+                        qsort+=1
                 else:
                     if(gtext.find('ICP')<0):
                         gtempcode=gtext                
