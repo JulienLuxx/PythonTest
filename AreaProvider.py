@@ -102,9 +102,21 @@ for u in urlArr:
             gsoup=bs(sp,'html.parser',from_encoding='gbk')
             grlist=gsoup.find_all('a')
             grlist.remove(grlist[len(grlist)-1])
+            gcount=0
+            gtempcode=''
             for gr in grlist:
-                print(provinceCodes[parentLabel]+'/'+gr.get('href'))
-                print(gr.get_text())
+                ghref=gr.get('href')
+                gtext=gr.get_text()
+                gcount+=1
+                if(gcount%2==0):
+                    if(gtext.find('ICP')<0):
+                        ga=Area(gtext,gtempcode,tempcode)
+                        AreaList.append(ga)
+                else:
+                    if(gtext.find('ICP')<0):
+                        gtempcode=gtext                
+
+
                 
         else:
             if(text.find('ICP')<0):
@@ -154,7 +166,7 @@ for u in urlArr:
 
 
 # write03Excel('data/2003.xls','Area',t)
-# write03ExcelNew('data/2003.xls','Area',AreaList)
+write03ExcelNew('data/2003.xls','Area',AreaList)
 
 # for key in dicts:
 #     print(key)
