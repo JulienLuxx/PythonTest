@@ -42,6 +42,7 @@ def write03ExcelNew(path,sheetName,lists):
         sheet.write(i,0,lists[i].name)
         sheet.write(i,1,lists[i].code)
         sheet.write(i,2,lists[i].parent)
+        sheet.write(i,3,lists[i].sort)
 
     wb.save(path)
     print('success')
@@ -103,25 +104,25 @@ for u in urlArr:
                 AreaList.append(aa)
                 csort+=1
 
-            sp=GetSinglePageHtml(url+href)
-            gsoup=bs(sp,'html.parser',from_encoding='gbk')
-            grlist=gsoup.find_all('a')
-            grlist.remove(grlist[len(grlist)-1])
-            gcount=0
-            gtempcode=''
-            qsort=1
-            for gr in grlist:
-                ghref=gr.get('href')
-                gtext=gr.get_text()
-                gcount+=1
-                if(gcount%2==0):
-                    if(gtext.find('ICP')<0):
-                        ga=Area(gtext,gtempcode,tempcode,qsort)
-                        AreaList.append(ga)
-                        qsort+=1
-                else:
-                    if(gtext.find('ICP')<0):
-                        gtempcode=gtext                
+            # sp=GetSinglePageHtml(url+href)
+            # gsoup=bs(sp,'html.parser',from_encoding='gbk')
+            # grlist=gsoup.find_all('a')
+            # grlist.remove(grlist[len(grlist)-1])
+            # gcount=0
+            # gtempcode=''
+            # qsort=1
+            # for gr in grlist:
+            #     ghref=gr.get('href')
+            #     gtext=gr.get_text()
+            #     gcount+=1
+            #     if(gcount%2==0):
+            #         if(gtext.find('ICP')<0):
+            #             ga=Area(gtext,gtempcode,tempcode,qsort)
+            #             AreaList.append(ga)
+            #             qsort+=1
+            #     else:
+            #         if(gtext.find('ICP')<0):
+            #             gtempcode=gtext                
 
 
                 
@@ -132,6 +133,33 @@ for u in urlArr:
         # sonArea.appendr.get_text()
     parentLabel+=1
 
+qAreaList=[]
+
+pLabel=0
+for qu in sonUrlArr:    
+    sp=GetSinglePageHtml(url+href)
+    gsoup=bs(sp,'html.parser',from_encoding='gbk')
+    grlist=gsoup.find_all('a')
+    grlist.remove(grlist[len(grlist)-1])
+    gcount=0
+    gtempcode=''
+    qsort=1
+    for gr in grlist:
+        ghref=gr.get('href')
+        gtext=gr.get_text()
+        gcount+=1
+        if(gcount%2==0):
+            if(gtext.find('ICP')<0):
+                ga=Area(gtext,gtempcode,areaParent[pLabel],qsort)
+                qAreaList.append(ga)
+                qsort+=1
+        else:
+            if(gtext.find('ICP')<0):
+                gtempcode=gtext
+    pLabel+=1
+
+
+print(qAreaList.count)
 # newArr=sorted(list(set(sonUrlArr)))
 
 # for a in provinceList:
@@ -173,7 +201,8 @@ for u in urlArr:
 
 
 # write03Excel('data/2003.xls','Area',t)
-write03ExcelNew('data/2003.xls','Area',AreaList)
+# write03ExcelNew('data/2003.xls','Area',AreaList)
+
 
 # for key in dicts:
 #     print(key)
