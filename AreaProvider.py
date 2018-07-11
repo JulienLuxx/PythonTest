@@ -8,6 +8,8 @@ from urllib import request
 from bs4 import BeautifulSoup as bs
 import math
 import xlwt
+import threading
+from time import ctime,sleep
 
 class Area(object):
     def __init__(self,name,code,parent,sort):
@@ -46,6 +48,8 @@ def write03ExcelNew(path,sheetName,lists):
 
     wb.save(path)
     print('success')
+
+
 
 urlArr=[]
 index='index.html'
@@ -136,7 +140,9 @@ for u in urlArr:
 qAreaList=[]
 
 pLabel=0
-for qu in sonUrlArr:    
+for qu in sonUrlArr: 
+    if(pLabel>0):
+        sleep(120)
     sp=GetSinglePageHtml(url+href)
     gsoup=bs(sp,'html.parser',from_encoding='gbk')
     grlist=gsoup.find_all('a')
@@ -159,7 +165,7 @@ for qu in sonUrlArr:
     pLabel+=1
 
 
-print(qAreaList.count)
+# print(qAreaList.count)
 # newArr=sorted(list(set(sonUrlArr)))
 
 # for a in provinceList:
@@ -202,7 +208,7 @@ print(qAreaList.count)
 
 # write03Excel('data/2003.xls','Area',t)
 # write03ExcelNew('data/2003.xls','Area',AreaList)
-
+write03ExcelNew('data/temp.xls','Area',qAreaList)
 
 # for key in dicts:
 #     print(key)
