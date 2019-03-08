@@ -10,6 +10,7 @@ from urllib import request
 from urllib import parse
 import threading
 from threading import Thread
+from multiprocessing import Process
 from time import ctime,sleep
 
 
@@ -29,29 +30,36 @@ def PostData(url,data):
         content =res.read()     
         return content
 
-def PostTest():
+def PostTest(i):
     result=GetData('http://localhost:54238/API/ArticleType/Detail?id=2')
-    data=json.loads(result)['data']
-    data['status']+=1
+    data=json.loads(result)['data']    
+    data['status']-=i
     postUrl='http://localhost:54238/API/ArticleType/EditAsync'
     postRes=PostData(postUrl,data)
     print(postRes)
 
 class ThreadPostTest(Thread):
+    def __init__(self,i):
+        super().__init__()
+        self.i=i
     def run(self):
-        PostTest()
+        PostTest(i)
 
-# result=GetData('http://localhost:54238/API/ArticleType/Detail?id=2')   
-# data=json.loads(result)['data']
-# data['status']+=1
-
-
-# postUrl='http://localhost:54238/API/ArticleType/EditAsync'
-# postRes=PostData(postUrl,data)
-# print(postRes)
+class ProcessPostTest(Process):
+    def __init__(self,i):
+        super().__init__()
+        self.i=i
+    def run(self):
+        PostTest(i)
 
 if __name__=='__main__': 
     print('MainThread')
-    for i in range(10):
-        t=ThreadPostTest()
+    for i in range(20):
+        t=ThreadPostTest(i)
         t.start()
+
+# if __name__=='__main__':
+#     print("MainProcess")
+#     for i in range(20):
+#         p=ProcessPostTest(i)
+#         p.run()
